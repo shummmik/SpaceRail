@@ -38,7 +38,7 @@ public class ButtonHide : MonoBehaviour
     {
         if (mainPanel.transform.localPosition.x != offset * (hide ? 1 : -1))
         {
-            Debug.Log(Mathf.Lerp(-1*offset, offset, hide ? 1f : 0f) + offsetWidth + 420);
+
             mainPanel.transform.localPosition =  new Vector3(Mathf.Lerp(-1*offset, offset, hide ? 1f : 0f) + offsetWidth ,
                 mainPanel.transform.localPosition.y,
                 mainPanel.transform.localPosition.z);

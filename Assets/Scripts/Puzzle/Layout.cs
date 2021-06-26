@@ -18,6 +18,9 @@ public class Layout : MonoBehaviour
     private int height = Screen.height;
     public int currentClosestExit = -1;
     public int CurrentUsedExit = 0;
+
+    private bool addPiece = false;
+    private bool rotatePiece = false;
     
     void OnDestroy()
     {
@@ -43,8 +46,15 @@ public class Layout : MonoBehaviour
         currentCLosestPiece = null;
         currentClosestExit = -1;
 
-        if (this.pieces.Count == 0)
-        {//if we have no piece, we force the instance in 0,0,0, as it's the seed piece
+        
+        if (rotatePiece)
+        {
+            rotatePiece = false;
+            CurrentUsedExit = CurrentUsedExit + 1 >= CurrentInstance.Connectors.Length ? 0 : CurrentUsedExit + 1;
+        }
+        
+        if (pieces.Count == 0)
+        {
             CurrentInstance.transform.position = this.transform.TransformPoint(Vector3.zero);
         }
         else
@@ -62,8 +72,6 @@ public class Layout : MonoBehaviour
                 {
                     if (r.ConnectorConnections[k] != null)
                         continue;
-                        
-                    // var guiPts = HandleUtility.WorldToGUIPoint(r.Connectors[k].transform.position);
                     var guiPts = Camera.main.WorldToScreenPoint(r.Connectors[k].transform.position);
                     
                     float dist = (guiPts - new Vector3(width/2, height/2,0)).sqrMagnitude;
@@ -80,41 +88,30 @@ public class Layout : MonoBehaviour
             if (currentCLosestPiece != null)
             {
                 CurrentInstance.transform.rotation = Quaternion.identity;
-                    
                 Transform closest = currentCLosestPiece.Connectors[currentClosestExit];
                 Transform usedExit = CurrentInstance.Connectors[CurrentUsedExit];
-
                 Quaternion targetRotation = Quaternion.LookRotation(-closest.forward, closest.up);
                 Quaternion difference = targetRotation * Quaternion.Inverse(usedExit.rotation);
-                    
                 Quaternion rotation = CurrentInstance.transform.rotation * difference;
                 CurrentInstance.transform.rotation = rotation;
-
                 CurrentInstance.transform.position = closest.position + CurrentInstance.transform.TransformVector(-usedExit.transform.localPosition);
             }
             
         }
 
-        if (Input.GetButtonUp("Jump"))
+        if (addPiece)
         {
-            
+            addPiece = false;
             var c = Instantiate(CurrentInstancePrefab);
-                //PrefabUtility.InstantiatePrefab(SelectedPiece) as Piece;
-            // c.gameObject.hideFlags = HideFlags.HideInHierarchy;
             c.transform.SetParent(this.transform, false);
-               
             c.transform.position = CurrentInstance.transform.position;
             c.transform.rotation = CurrentInstance.transform.rotation;
             c.transform.localScale = CurrentInstance.transform.localScale;
             
-            // c.name = m_SelectedPiece.gameObject.name;
+            c.name = CurrentInstancePrefab.gameObject.name;
             c.gameObject.isStatic = true;
-                
             c.Placed(this);
-            
             pieces.Add(c);
-            
-            
             if (currentCLosestPiece != null)
             {
                 currentCLosestPiece.ConnectorConnections[currentClosestExit] = c;
@@ -126,6 +123,15 @@ public class Layout : MonoBehaviour
         
     }
 
+    public void EnableAdd()
+    {
+        addPiece = true;
+    }
+    
+    public void EnableRotate()
+    {
+        rotatePiece = true;
+    }
     public void SelectPiece(Piece piece)
     {
         CurrentInstancePrefab = piece;
