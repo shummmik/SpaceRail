@@ -10,7 +10,7 @@ public class ButtonHide : MonoBehaviour
     [SerializeField] private GameObject text;
     
     private bool hide;
-    private float offset = 250f;
+    [SerializeField] private float offset = 185f;//half panel for buttons
     private float offsetWidth; 
     private void OnEnable()
     {
@@ -46,8 +46,4 @@ public class ButtonHide : MonoBehaviour
         
     }
 
-    private void HideMainPanel(bool direction)
-    {
-        
-    }
 }

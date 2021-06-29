@@ -15,16 +15,13 @@ public class Piece : MonoBehaviour
 
    [HideInInspector]
    public Layout Owner;
-
-   /// <summary>
-   /// Called by the editor script that place piece to initialize the ExitUsed array to match Exits
-   /// </summary>
+   
    public void Placed(Layout layoutOwner)
    {
       Owner = layoutOwner;
       ConnectorConnections = new Piece[Connectors.Length];
    }
-/*
+
    public void  Removed()
    {   
       if (ConnectorConnections != null)
@@ -71,5 +68,5 @@ public class Piece : MonoBehaviour
             ownerObject.ApplyModifiedProperties();
       }
    }
-*/
+
 }

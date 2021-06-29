@@ -19,8 +19,10 @@ public class Layout : MonoBehaviour
     public int currentClosestExit = -1;
     public int CurrentUsedExit = 0;
 
-    private bool addPiece = false;
+    private bool addPiece = true;
     private bool rotatePiece = false;
+
+    [SerializeField] private Material outLine;
     
     void OnDestroy()
     {
@@ -28,86 +30,149 @@ public class Layout : MonoBehaviour
     }
 
     private void Start()
-    {   
-        CurrentInstance = Instantiate(CurrentInstancePrefab, this.transform);
-        CurrentInstance.name = "TempInstance";
+    {
+        // CurrentInstancePrefab = 
+        if (addPiece)
+        {
+            CurrentInstance = Instantiate(CurrentInstancePrefab, this.transform);
+            CurrentInstance.name = "TempInstance";
+        }
     }
 
     void Update()
     {
 
-
-        var horizontal = Input.GetAxis("Horizontal");
-        var vertical = Input.GetAxis("Vertical");
-        _camera.transform.position =  new Vector3(5 * horizontal * Time.deltaTime +_camera.transform.position.x,
-            _camera.transform.position.y + 5 * vertical * Time.deltaTime,
-            _camera.transform.position.z)  ;
-
+        //
+        // var horizontal = Input.GetAxis("Horizontal");
+        // var vertical = Input.GetAxis("Vertical");
+        // _camera.transform.position =  new Vector3(5 * horizontal * Time.deltaTime +_camera.transform.position.x,
+        //     _camera.transform.position.y + 5 * vertical * Time.deltaTime,
+        //     _camera.transform.position.z)  ;
         currentCLosestPiece = null;
         currentClosestExit = -1;
 
-        
-        if (rotatePiece)
+        if (addPiece)
         {
-            rotatePiece = false;
-            CurrentUsedExit = CurrentUsedExit + 1 >= CurrentInstance.Connectors.Length ? 0 : CurrentUsedExit + 1;
-        }
-        
-        if (pieces.Count == 0)
-        {
-            CurrentInstance.transform.position = this.transform.TransformPoint(Vector3.zero);
+            if (rotatePiece)
+            {
+                rotatePiece = false;
+                CurrentUsedExit = CurrentUsedExit + 1 >= CurrentInstance.Connectors.Length ? 0 : CurrentUsedExit + 1;
+            }
+
+            if (pieces.Count == 0)
+            {
+                CurrentInstance.transform.position = this.transform.TransformPoint(Vector3.zero);
+            }
+            else
+            {
+
+                float closestSqrDist = float.MaxValue;
+                for (int i = 0; i < this.pieces.Count; ++i)
+                {
+                    Piece r = pieces[i];
+
+                    if (r == null)
+                        continue;
+
+                    for (int k = 0; k < r.Connectors.Length; ++k)
+                    {
+                        if (r.ConnectorConnections[k] != null)
+                            continue;
+                        var guiPts = Camera.main.WorldToScreenPoint(r.Connectors[k].transform.position);
+
+                        float dist = (guiPts - new Vector3(width / 2, height / 2, 0)).sqrMagnitude;
+
+                        if (dist < closestSqrDist)
+                        {
+                            closestSqrDist = dist;
+                            currentCLosestPiece = r;
+                            currentClosestExit = k;
+                        }
+                    }
+                }
+
+                if (currentCLosestPiece != null)
+                {
+                    CurrentInstance.transform.rotation = Quaternion.identity;
+                    Transform closest = currentCLosestPiece.Connectors[currentClosestExit];
+                    Transform usedExit = CurrentInstance.Connectors[CurrentUsedExit];
+                    Quaternion targetRotation = Quaternion.LookRotation(-closest.forward, closest.up);
+                    Quaternion difference = targetRotation * Quaternion.Inverse(usedExit.rotation);
+                    Quaternion rotation = CurrentInstance.transform.rotation * difference;
+                    CurrentInstance.transform.rotation = rotation;
+                    CurrentInstance.transform.position = closest.position +
+                                                         CurrentInstance.transform.TransformVector(-usedExit.transform
+                                                             .localPosition);
+                }
+
+            }
         }
         else
         {
-            
-            float closestSqrDist = float.MaxValue;
-            for (int i = 0; i < this.pieces.Count; ++i)
+            if (pieces.Count > 0)
             {
-                Piece r = pieces[i];
-                    
-                if(r == null)
-                    continue;
-                    
-                for (int k = 0; k < r.Connectors.Length; ++k)
-                {
-                    if (r.ConnectorConnections[k] != null)
-                        continue;
-                    var guiPts = Camera.main.WorldToScreenPoint(r.Connectors[k].transform.position);
-                    
-                    float dist = (guiPts - new Vector3(width/2, height/2,0)).sqrMagnitude;
 
-                    if (dist < closestSqrDist)
+                float closestSqrDist = float.MaxValue;
+                for (int i = 0; i < this.pieces.Count; ++i)
+                {
+                    Piece r = pieces[i];
+
+                    if (r == null)
+                        continue;
+
+                    for (int k = 0; k < r.Connectors.Length; ++k)
                     {
-                        closestSqrDist = dist;
-                        currentCLosestPiece = r;
-                        currentClosestExit = k;
+                        if (r.ConnectorConnections[k] != null)
+                            continue;
+                        var guiPts = Camera.main.WorldToScreenPoint(r.Connectors[k].transform.position);
+
+                        float dist = (guiPts - new Vector3(width / 2, height / 2, 0)).sqrMagnitude;
+
+                        if (dist < closestSqrDist)
+                        {
+                            closestSqrDist = dist;
+                            currentCLosestPiece = r;
+                            currentClosestExit = k;
+                        }
                     }
                 }
-            }
-            
-            if (currentCLosestPiece != null)
-            {
-                CurrentInstance.transform.rotation = Quaternion.identity;
-                Transform closest = currentCLosestPiece.Connectors[currentClosestExit];
-                Transform usedExit = CurrentInstance.Connectors[CurrentUsedExit];
-                Quaternion targetRotation = Quaternion.LookRotation(-closest.forward, closest.up);
-                Quaternion difference = targetRotation * Quaternion.Inverse(usedExit.rotation);
-                Quaternion rotation = CurrentInstance.transform.rotation * difference;
-                CurrentInstance.transform.rotation = rotation;
-                CurrentInstance.transform.position = closest.position + CurrentInstance.transform.TransformVector(-usedExit.transform.localPosition);
-            }
-            
-        }
 
+                if (currentCLosestPiece != null)
+                {
+
+
+                }
+
+
+            }
+
+
+        }
+    }
+
+    public void DelPiece()
+    {
+        if (!addPiece)
+        {
+            currentCLosestPiece.Removed();
+            
+            int index = pieces.IndexOf(currentCLosestPiece);
+            Debug.Log(index);
+            pieces.Remove(currentCLosestPiece);
+            Destroy(currentCLosestPiece.gameObject);
+        }
+    }
+
+    public void AddPiece()
+    {
         if (addPiece)
         {
-            addPiece = false;
             var c = Instantiate(CurrentInstancePrefab);
             c.transform.SetParent(this.transform, false);
             c.transform.position = CurrentInstance.transform.position;
             c.transform.rotation = CurrentInstance.transform.rotation;
             c.transform.localScale = CurrentInstance.transform.localScale;
-            
+
             c.name = CurrentInstancePrefab.gameObject.name;
             c.gameObject.isStatic = true;
             c.Placed(this);
@@ -117,15 +182,20 @@ public class Layout : MonoBehaviour
                 currentCLosestPiece.ConnectorConnections[currentClosestExit] = c;
                 c.ConnectorConnections[CurrentUsedExit] = currentCLosestPiece;
             }
-
-            
         }
-        
     }
-
+    
     public void EnableAdd()
     {
         addPiece = true;
+        CurrentInstance = Instantiate(CurrentInstancePrefab, this.transform);
+        CurrentInstance.name = "TempInstance";
+    }
+    
+    public void EnableDel()
+    {
+        addPiece = false;
+        Destroy(CurrentInstance.gameObject);
     }
     
     public void EnableRotate()
