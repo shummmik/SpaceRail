@@ -1,8 +1,12 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
-public class StateMachine : MonoBehaviour
+
+
+public class StateMachine : Singleton<StateMachine>
 {
-    
     private BaseState currentState;
+
     private void Update()
     {
 
@@ -11,10 +15,10 @@ public class StateMachine : MonoBehaviour
             currentState.UpdateState();
         }
     }
-
+    
     public void ChangeState(BaseState newState)
     {
-
+        
         if (currentState != null)
         {
             currentState.DestroyState();
@@ -27,4 +31,7 @@ public class StateMachine : MonoBehaviour
             currentState.PrepareState();
         }
     }
+
+
+    
 }

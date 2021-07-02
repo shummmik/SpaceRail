@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class ObjectsManager : Singleton<ObjectsManager>
 {
+    [SerializeField] private GameObject ball;
+    [SerializeField] private Vector3 startPosition = Vector3.up*.5f;
+    
     [SerializeField] private List<Layout> layouts;
     [SerializeField] Piece selectPiece;
     public Layout SelectLayout { get; set; }
@@ -11,6 +14,7 @@ public class ObjectsManager : Singleton<ObjectsManager>
     
     private void Awake()
     {
+        
         InitializeLayout();
     }
 
@@ -68,5 +72,30 @@ public class ObjectsManager : Singleton<ObjectsManager>
     public void EnableAdd()
     {
         SelectLayout.EnableAdd();
+    }
+
+    public void ResetPositionBall()
+    {
+        ball.transform.position = startPosition;
+    }
+    
+    public void SetPositionBall(Vector3 newPosition)
+    {
+        startPosition = newPosition;
+        ball.transform.position = startPosition;
+    }
+    
+    public void SetPlayState()
+    {
+        SelectLayout.SetPlayState();
+        ball.GetComponent<Rigidbody>().useGravity = true;
+    }
+    
+    public void SetEditState()
+    {
+        SelectLayout.SetEditState();
+        ball.GetComponent<Rigidbody>().useGravity = false;
+        ball.transform.position = startPosition;
+
     }
 }

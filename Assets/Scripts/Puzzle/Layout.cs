@@ -159,7 +159,7 @@ public class Layout : MonoBehaviour
 
     public void DelPiece()
     {
-        if (!addPiece)
+        if (!addPiece && currentCLosestPiece != null)
         {
             currentCLosestPiece.Removed();
             pieces.Remove(currentCLosestPiece);
@@ -228,6 +228,8 @@ public class Layout : MonoBehaviour
     public void SetPlayState()
     {
         edit = false;
+        if (CurrentInstance != null)
+            Destroy(CurrentInstance.gameObject);
     }
     
     public void SetEditState()

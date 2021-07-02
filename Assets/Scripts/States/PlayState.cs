@@ -1,15 +1,12 @@
 using UnityEngine;
 
-public class EditState
-    : BaseState
+public class PlayState : BaseState
 {
 
-    public float minWait = 1;
-
-    private float waitTime;
     public override void PrepareState()
     {
         base.PrepareState();
+        ObjectsManager.Instance.SetPlayState();
 
     }
     public override void UpdateState()
@@ -17,7 +14,7 @@ public class EditState
         base.UpdateState();
 
 
-            // owner.ChangeState(new MoveState());
+        // owner.ChangeState(new MoveState());
 
     }
 }
