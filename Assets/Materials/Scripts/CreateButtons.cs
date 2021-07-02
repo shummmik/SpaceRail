@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class CreateButtons : MonoBehaviour
 {
     public GameObject button;
-    public Layout selectLayout;
+    // public ObjectsManager objectsManager;
     // public List<Piece> pieces;
 
     [SerializeField] private PieceSpriteBox pieceSpriteBox;
@@ -24,13 +24,14 @@ public class CreateButtons : MonoBehaviour
             GameObject buttonPreview = Instantiate(button);
             buttonPreview.GetComponent<Image>().overrideSprite =  pieceSprite.sprite;
             buttonPreview.transform.SetParent(this.gameObject.transform);
-            buttonPreview.GetComponent<Button>().onClick.AddListener(() => SetPiece(pieceSprite.piece.gameObject.GetComponent<Piece>()));
+            buttonPreview.GetComponent<Button>().onClick.AddListener(() => SetPiece(pieceSprite.piece));
             
         }
     }
     public  void SetPiece(Piece piece)
     {
-        selectLayout.SelectPiece(piece);
+        ObjectsManager.Instance.SetPiece(piece);
+        // selectLayout.SelectPiece(piece);
     }
 
 }
