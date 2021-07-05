@@ -6,22 +6,32 @@ public class ObjectsManager : Singleton<ObjectsManager>
 {
     [SerializeField] private GameObject ball;
     [SerializeField] private Vector3 startPosition = Vector3.up*.5f;
+
+    private Rigidbody rigidbodyBall;
     
     [SerializeField] private List<Layout> layouts;
     [SerializeField] Piece selectPiece;
     public Layout SelectLayout { get; set; }
     [SerializeField] private Material outLineMaterial;
+
+    private CollisionDetectionMode ballDetectionMode = CollisionDetectionMode.ContinuousDynamic;
+    // private float massBall = 2.5f;
+    // private float dradBall = 0.2f;
+    // private float angularDrag = 0.2f;
+    private Vector3 velocityBall;
+    
     
     private void Awake()
     {
         
+        rigidbodyBall = ball.GetComponent<Rigidbody>();
         InitializeLayout();
     }
 
     public void SetPiece(Piece piece)
     {
         selectPiece = piece;
-        Debug.Log(SelectLayout);
+        //Debug.Log(SelectLayout);
         SelectLayout.SelectPiece(piece);
     }
     public void CreateLayout()
@@ -88,14 +98,38 @@ public class ObjectsManager : Singleton<ObjectsManager>
     public void SetPlayState()
     {
         SelectLayout.SetPlayState();
-        ball.GetComponent<Rigidbody>().useGravity = true;
+        BallPlay();
     }
     
     public void SetEditState()
     {
         SelectLayout.SetEditState();
-        ball.GetComponent<Rigidbody>().useGravity = false;
+        
+        rigidbodyBall.useGravity = false;
+        rigidbodyBall.velocity = Vector3.zero;
+
         ball.transform.position = startPosition;
 
+    }
+
+    public void BallPlay()
+    {
+        rigidbodyBall.useGravity = true;
+    }
+    
+    public void SetPauseState()
+    {
+        velocityBall = rigidbodyBall.velocity;
+        rigidbodyBall.isKinematic = true;
+        rigidbodyBall.useGravity = false;
+        // Destroy(ball.GetComponent<Rigidbody>());
+
+    }
+
+    public void PauseToPlayState()
+    {
+        rigidbodyBall.isKinematic = false;
+        rigidbodyBall.useGravity = true;
+        rigidbodyBall.velocity = velocityBall;
     }
 }

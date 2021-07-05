@@ -235,5 +235,6 @@ public class Layout : MonoBehaviour
     public void SetEditState()
     {
         edit = true;
+        CreateCurrentInstance();
     }
 }

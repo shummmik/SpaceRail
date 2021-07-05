@@ -7,6 +7,15 @@ public class StateMachine : Singleton<StateMachine>
 {
     private BaseState currentState;
 
+    public List<GameObject> listObjectsPlay;
+    public List<GameObject> listObjectsPause;
+    public List<GameObject> listObjectsEdit;
+
+    private void Start()
+    {
+        ChangeState(new EditState());
+    }
+
     private void Update()
     {
 
