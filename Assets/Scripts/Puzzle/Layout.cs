@@ -32,10 +32,9 @@ public class Layout : MonoBehaviour
 
     private void Start()
     {
-        // CurrentInstancePrefab = 
         if (addPiece)
         {
-            CreateCurrentInstance();
+           // CreateCurrentInstance();
         }
     }
 
@@ -193,7 +192,8 @@ public class Layout : MonoBehaviour
     {
 
         addPiece = true;
-        CreateCurrentInstance();
+        if (CurrentInstance == null)
+            CreateCurrentInstance();
     }
 
     private void CreateCurrentInstance()
@@ -235,6 +235,7 @@ public class Layout : MonoBehaviour
     public void SetEditState()
     {
         edit = true;
-        CreateCurrentInstance();
+        if (CurrentInstance == null)
+            CreateCurrentInstance();
     }
 }

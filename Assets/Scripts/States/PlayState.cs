@@ -7,7 +7,7 @@ public class PlayState : BaseState
     {
         base.PrepareState();
         ObjectsManager.Instance.SetPlayState();
-        ObjectsManager.Instance.BallPlay();
+        // ObjectsManager.Instance.BallPlay();
         
         
         for (int i = 0; i < owner.listObjectsEdit.Count; i++)
@@ -22,13 +22,14 @@ public class PlayState : BaseState
         {
             owner.listObjectsPlay[i].SetActive(false);
         }
-        
+        owner.panelEditor.SetActive(false);
 
     }
     public override void UpdateState()
     {
         base.UpdateState();
-
+        if (ObjectsManager.Instance.ball.transform.position.y < 0f)
+            owner.ChangeState(new EditState());
 
         // owner.ChangeState(new MoveState());
 

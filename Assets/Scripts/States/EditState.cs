@@ -20,6 +20,7 @@ public class EditState: BaseState
         {
             owner.listObjectsPlay[i].SetActive(true);
         }
+        owner.panelEditor.SetActive(true);
     }
     public override void UpdateState()
     {

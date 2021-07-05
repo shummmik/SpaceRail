@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ObjectsManager : Singleton<ObjectsManager>
 {
-    [SerializeField] private GameObject ball;
+    public GameObject ball;
     [SerializeField] private Vector3 startPosition = Vector3.up*.5f;
 
     private Rigidbody rigidbodyBall;
@@ -104,12 +104,9 @@ public class ObjectsManager : Singleton<ObjectsManager>
     public void SetEditState()
     {
         SelectLayout.SetEditState();
-        
         rigidbodyBall.useGravity = false;
         rigidbodyBall.velocity = Vector3.zero;
-
         ball.transform.position = startPosition;
-
     }
 
     public void BallPlay()
@@ -122,8 +119,6 @@ public class ObjectsManager : Singleton<ObjectsManager>
         velocityBall = rigidbodyBall.velocity;
         rigidbodyBall.isKinematic = true;
         rigidbodyBall.useGravity = false;
-        // Destroy(ball.GetComponent<Rigidbody>());
-
     }
 
     public void PauseToPlayState()
