@@ -26,14 +26,14 @@ public class Piece : MonoBehaviour
    {   
       if (ConnectorConnections != null)
       {
-         for (int i = 0; i < ConnectorConnections.Length; ++i)
+         for (int i = 0; i < ConnectorConnections.Length; ++i) // Может проще Foreach?
          {
             if (ConnectorConnections[i] != null)
             {
                var connectorProp = ConnectorConnections[i].ConnectorConnections;
                
-               for (int k = 0; k < connectorProp.Length; ++k)
-               {
+               for (int k = 0; k < connectorProp.Length; ++k)// Может проще Foreach?
+                    {
                   var prop = connectorProp[k];
                   if (connectorProp[k] == this)
                   {

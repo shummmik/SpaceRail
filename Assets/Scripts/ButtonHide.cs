@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -7,8 +7,8 @@ using UnityEngine;
 public class ButtonHide : MonoBehaviour
 {
     [SerializeField] private GameObject mainPanel;
-    [SerializeField] private GameObject text;
-    
+    [SerializeField] private GameObject text; // Почему сразу не использовать TMP_Text ?
+
     private bool hide;
     [SerializeField] private float offset = 185f;//half panel for buttons
     private float offsetWidth; 

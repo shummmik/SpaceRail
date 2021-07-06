@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -38,8 +38,8 @@ public class Layout : MonoBehaviour
         }
     }
 
-    void Update()
-    {
+    void Update() 
+    { // Очень много когда. Сложно понять что тут происходит. ЛУчше разбить на блоки и методы. Или перевести это на стейты.
 
         if (edit)
         {
@@ -58,7 +58,7 @@ public class Layout : MonoBehaviour
 
                 if (pieces.Count == 0)
                 {
-                    CurrentInstance.transform.position = this.transform.TransformPoint(Vector3.zero);
+                    CurrentInstance.transform.position = this.transform.TransformPoint(Vector3.zero); // А это не тоже самое что и transform.position?
                 }
                 else
                 {
@@ -66,7 +66,7 @@ public class Layout : MonoBehaviour
                     float closestSqrDist = float.MaxValue;
                     for (int i = 0; i < this.pieces.Count; ++i)
                     {
-                        Piece r = pieces[i];
+                        Piece r = pieces[i]; // Ох)) С неймингом ты не помгаешь. Не сильно понятно что за "r")) я сперва подумал что ты так сократил rigidbody)))
 
                         if (r == null)
                             continue;
@@ -75,7 +75,7 @@ public class Layout : MonoBehaviour
                         {
                             if (r.ConnectorConnections[k] != null)
                                 continue;
-                            var guiPts = Camera.main.WorldToScreenPoint(r.Connectors[k].transform.position);
+                            var guiPts = Camera.main.WorldToScreenPoint(r.Connectors[k].transform.position); // в update лучше такое избешать и использовать закэшированную камеру
 
                             float dist = (guiPts - new Vector3(width / 2, height / 2, 0)).sqrMagnitude;
 
@@ -100,7 +100,7 @@ public class Layout : MonoBehaviour
                         CurrentInstance.transform.position = closest.position +
                                                              CurrentInstance.transform.TransformVector(-usedExit
                                                                  .transform
-                                                                 .localPosition);
+                                                                 .localPosition); // лучше разбивать такое на переменные чтобы проще было читать код
                     }
 
                 }
@@ -138,7 +138,7 @@ public class Layout : MonoBehaviour
                     if (currentCLosestPiece != null)
                     {
                         // currentCLosestPiece.gameObject.GetComponent<MeshRenderer>().material = outLineMaterial;
-                        MeshFilter filter = currentCLosestPiece.gameObject.GetComponentInChildren<MeshFilter>();
+                        MeshFilter filter = currentCLosestPiece.gameObject.GetComponentInChildren<MeshFilter>(); // лучше внутри Piece закешить MeshFilter и пользоваться им без GetComponentInChildren
 
                         if (filter != null)
                         {

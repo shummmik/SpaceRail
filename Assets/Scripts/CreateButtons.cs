@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
@@ -28,7 +28,7 @@ public class CreateButtons : MonoBehaviour
             
         }
     }
-    public  void SetPiece(Piece piece)
+    public  void SetPiece(Piece piece) // Почему паблик? 
     {
         ObjectsManager.Instance.SetPiece(piece);
         // selectLayout.SelectPiece(piece);

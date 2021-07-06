@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,14 +7,14 @@ public class ObjectsManager : Singleton<ObjectsManager>
     public GameObject ball;
     [SerializeField] private Vector3 startPosition = Vector3.up*.5f;
 
-    private Rigidbody rigidbodyBall;
+    private Rigidbody rigidbodyBall; // может сразу сделать ссылку пабликом и можно будет удалить ссылку на Ball
     
     [SerializeField] private List<Layout> layouts;
     [SerializeField] Piece selectPiece;
-    public Layout SelectLayout { get; set; }
+    public Layout SelectLayout { get; set; } // В чем сысл проперти ради проперти?
     [SerializeField] private Material outLineMaterial;
 
-    private CollisionDetectionMode ballDetectionMode = CollisionDetectionMode.ContinuousDynamic;
+    private CollisionDetectionMode ballDetectionMode = CollisionDetectionMode.ContinuousDynamic; // неиспользуется нигде
     // private float massBall = 2.5f;
     // private float dradBall = 0.2f;
     // private float angularDrag = 0.2f;
