@@ -1,12 +1,15 @@
 using UnityEngine;
 
-public class PauseState : BaseState
+public class TransformState: BaseState
 {
-    
+
+
+
+    private float waitTime;
     public override void PrepareState()
     {
         base.PrepareState();
-        ObjectsManager.Instance.SetPauseState();
+        
         
         for (int i = 0; i < owner.listObjectsEdit.Count; i++)
         {
@@ -32,11 +35,5 @@ public class PauseState : BaseState
 
         // owner.ChangeState(new MoveState());
 
-    }
-
-    public override void DestroyState()
-    {
-        base.DestroyState();
-        ObjectsManager.Instance.PauseToPlayState();
     }
 }

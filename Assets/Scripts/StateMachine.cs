@@ -11,9 +11,11 @@ public class StateMachine : Singleton<StateMachine>
     public List<GameObject> listObjectsPlay;
     public List<GameObject> listObjectsPause;
     public List<GameObject> listObjectsEdit;
+    public List<GameObject> listObjectsTransform;
 
     private void Start()
     {
+        
         ChangeState(new EditState());
     }
 

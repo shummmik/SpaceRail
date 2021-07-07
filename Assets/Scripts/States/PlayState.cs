@@ -22,6 +22,11 @@ public class PlayState : BaseState
         {
             owner.listObjectsPlay[i].SetActive(false);
         }
+        for (int i = 0; i < owner.listObjectsTransform.Count; i++)
+        {
+            owner.listObjectsTransform[i].SetActive(false);
+        }
+        
         owner.panelEditor.SetActive(false);
 
     }

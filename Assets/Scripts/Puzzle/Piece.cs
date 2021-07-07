@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -15,7 +16,15 @@ public class Piece : MonoBehaviour
 
    [HideInInspector]
    public Layout Owner;
-   
+
+   public MeshFilter meshFilter;
+
+
+   private void Start()
+   {
+      meshFilter = GetComponent<MeshFilter>();
+   }
+
    public void Placed(Layout layoutOwner)
    {
       Owner = layoutOwner;
@@ -26,15 +35,14 @@ public class Piece : MonoBehaviour
    {   
       if (ConnectorConnections != null)
       {
-         for (int i = 0; i < ConnectorConnections.Length; ++i)
+         foreach (var connectorConnection in ConnectorConnections)
          {
-            if (ConnectorConnections[i] != null)
+            if (connectorConnection != null)
             {
-               var connectorProp = ConnectorConnections[i].ConnectorConnections;
+               var connectorProp = connectorConnection.ConnectorConnections;
                
                for (int k = 0; k < connectorProp.Length; ++k)
                {
-                  var prop = connectorProp[k];
                   if (connectorProp[k] == this)
                   {
                      connectorProp[k] = null;
@@ -42,6 +50,7 @@ public class Piece : MonoBehaviour
                }
             }
          }
+         
       }
 
    }

@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class ObjectsManager : Singleton<ObjectsManager>
 {
+    [SerializeField] private Camera camera;
     public GameObject ball;
     [SerializeField] private Vector3 startPosition = Vector3.up*.5f;
 
@@ -14,10 +15,6 @@ public class ObjectsManager : Singleton<ObjectsManager>
     public Layout SelectLayout { get; set; }
     [SerializeField] private Material outLineMaterial;
 
-    private CollisionDetectionMode ballDetectionMode = CollisionDetectionMode.ContinuousDynamic;
-    // private float massBall = 2.5f;
-    // private float dradBall = 0.2f;
-    // private float angularDrag = 0.2f;
     private Vector3 velocityBall;
     
     
@@ -31,7 +28,7 @@ public class ObjectsManager : Singleton<ObjectsManager>
     public void SetPiece(Piece piece)
     {
         selectPiece = piece;
-        //Debug.Log(SelectLayout);
+
         SelectLayout.SelectPiece(piece);
     }
     public void CreateLayout()
@@ -51,6 +48,7 @@ public class ObjectsManager : Singleton<ObjectsManager>
         instance.AddComponent<Layout>();
         instance.name = "Layout"; 
         SelectLayout = instance.GetComponent<Layout>();
+        SelectLayout.camera = camera;
         SelectLayout.CurrentInstancePrefab = selectPiece;
         SelectLayout.outLineMaterial = outLineMaterial;
         layouts.Add(SelectLayout);

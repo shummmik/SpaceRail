@@ -28,10 +28,9 @@ public class CreateButtons : MonoBehaviour
             
         }
     }
-    public  void SetPiece(Piece piece)
+    private void SetPiece(Piece piece)
     {
         ObjectsManager.Instance.SetPiece(piece);
-        // selectLayout.SelectPiece(piece);
     }
 
 }

@@ -7,7 +7,7 @@ using UnityEngine;
 
 public class Layout : MonoBehaviour
 {
-
+    public Camera camera;
     public List<Piece> pieces = new List<Piece>();
     public bool Destroyed { get; private set; }
     public Piece CurrentInstancePrefab = null;
@@ -30,14 +30,6 @@ public class Layout : MonoBehaviour
         Destroyed = true;
     }
 
-    private void Start()
-    {
-        if (addPiece)
-        {
-           // CreateCurrentInstance();
-        }
-    }
-
     void Update()
     {
 
@@ -58,32 +50,31 @@ public class Layout : MonoBehaviour
 
                 if (pieces.Count == 0)
                 {
-                    CurrentInstance.transform.position = this.transform.TransformPoint(Vector3.zero);
+                    CurrentInstance.transform.position = Vector3.zero;
                 }
                 else
                 {
-
                     float closestSqrDist = float.MaxValue;
-                    for (int i = 0; i < this.pieces.Count; ++i)
+                    
+                    for (int i = 0; i < pieces.Count; ++i)
                     {
-                        Piece r = pieces[i];
-
-                        if (r == null)
+                        Piece pieceInList = pieces[i];
+                        if (pieceInList == null)
                             continue;
-
-                        for (int k = 0; k < r.Connectors.Length; ++k)
+                        
+                        for (int numConnectorInPiece = 0; numConnectorInPiece < pieceInList.Connectors.Length; ++numConnectorInPiece)
                         {
-                            if (r.ConnectorConnections[k] != null)
+                            if (pieceInList.ConnectorConnections[numConnectorInPiece] != null)
                                 continue;
-                            var guiPts = Camera.main.WorldToScreenPoint(r.Connectors[k].transform.position);
+                            var guiPts = Camera.main.WorldToScreenPoint(pieceInList.Connectors[numConnectorInPiece].transform.position);
 
                             float dist = (guiPts - new Vector3(width / 2, height / 2, 0)).sqrMagnitude;
 
                             if (dist < closestSqrDist)
                             {
                                 closestSqrDist = dist;
-                                currentCLosestPiece = r;
-                                currentClosestExit = k;
+                                currentCLosestPiece = pieceInList;
+                                currentClosestExit = numConnectorInPiece;
                             }
                         }
                     }
@@ -98,39 +89,37 @@ public class Layout : MonoBehaviour
                         Quaternion rotation = CurrentInstance.transform.rotation * difference;
                         CurrentInstance.transform.rotation = rotation;
                         CurrentInstance.transform.position = closest.position +
-                                                             CurrentInstance.transform.TransformVector(-usedExit
-                                                                 .transform
-                                                                 .localPosition);
+                                                             CurrentInstance.transform.TransformVector(
+                                                                 -usedExit.transform.localPosition
+                                                                 );
                     }
-
                 }
             }
             else
             {
                 if (pieces.Count > 0)
                 {
-
                     float closestSqrDist = float.MaxValue;
                     for (int i = 0; i < this.pieces.Count; ++i)
                     {
-                        Piece r = pieces[i];
+                        Piece pieceInList = pieces[i];
 
-                        if (r == null)
+                        if (pieceInList == null)
                             continue;
 
-                        for (int k = 0; k < r.Connectors.Length; ++k)
+                        for (int numConnectorInPiece = 0; numConnectorInPiece < pieceInList.Connectors.Length; ++numConnectorInPiece)
                         {
-                            if (r.ConnectorConnections[k] != null)
+                            if (pieceInList.ConnectorConnections[numConnectorInPiece] != null)
                                 continue;
-                            var guiPts = Camera.main.WorldToScreenPoint(r.Connectors[k].transform.position);
+                            var guiPts = Camera.main.WorldToScreenPoint(pieceInList.Connectors[numConnectorInPiece].transform.position);
 
                             float dist = (guiPts - new Vector3(width / 2, height / 2, 0)).sqrMagnitude;
 
                             if (dist < closestSqrDist)
                             {
                                 closestSqrDist = dist;
-                                currentCLosestPiece = r;
-                                currentClosestExit = k;
+                                currentCLosestPiece = pieceInList;
+                                currentClosestExit = numConnectorInPiece;
                             }
                         }
                     }
@@ -138,7 +127,7 @@ public class Layout : MonoBehaviour
                     if (currentCLosestPiece != null)
                     {
                         // currentCLosestPiece.gameObject.GetComponent<MeshRenderer>().material = outLineMaterial;
-                        MeshFilter filter = currentCLosestPiece.gameObject.GetComponentInChildren<MeshFilter>();
+                        MeshFilter filter = currentCLosestPiece.meshFilter;
 
                         if (filter != null)
                         {

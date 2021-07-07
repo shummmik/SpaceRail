@@ -7,7 +7,7 @@ using UnityEngine;
 public class ButtonHide : MonoBehaviour
 {
     [SerializeField] private GameObject mainPanel;
-    [SerializeField] private GameObject text;
+    [SerializeField] private TMP_Text text;
     
     private bool hide;
     [SerializeField] private float offset = 185f;//half panel for buttons
@@ -16,7 +16,7 @@ public class ButtonHide : MonoBehaviour
     {
         offsetWidth = Screen.width / 2;
         hide = true;
-        text.GetComponent<TMP_Text>().text = "<";
+        text.text = "<";
     }
     
 
@@ -24,12 +24,12 @@ public class ButtonHide : MonoBehaviour
     {
         if (hide)
         {
-            text.GetComponent<TMP_Text>().text = ">";
+            text.text = ">";
             hide = false;
         }
         else
         {
-            text.GetComponent<TMP_Text>().text = "<";
+            text.text = "<";
             hide = true;
         }
     }
