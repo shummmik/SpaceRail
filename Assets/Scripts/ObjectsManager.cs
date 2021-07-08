@@ -6,9 +6,10 @@ public class ObjectsManager : Singleton<ObjectsManager>
 {
     [SerializeField] private Camera camera;
     public GameObject ball;
-    [SerializeField] private Vector3 startPosition = Vector3.up*.5f;
+    public Vector3 startPosition = Vector3.up*.5f;
 
-    private Rigidbody rigidbodyBall;
+    [SerializeField]  private Rigidbody rigidbodyBall;
+    public Transform transformBall;
     
     [SerializeField] private List<Layout> layouts;
     [SerializeField] Piece selectPiece;
@@ -21,7 +22,7 @@ public class ObjectsManager : Singleton<ObjectsManager>
     private void Awake()
     {
         
-        rigidbodyBall = ball.GetComponent<Rigidbody>();
+        //rigidbodyBall = ball.GetComponent<Rigidbody>();
         InitializeLayout();
     }
 
@@ -84,13 +85,13 @@ public class ObjectsManager : Singleton<ObjectsManager>
 
     public void ResetPositionBall()
     {
-        ball.transform.position = startPosition;
+        transformBall.position = startPosition;
     }
     
     public void SetPositionBall(Vector3 newPosition)
     {
         startPosition = newPosition;
-        ball.transform.position = startPosition;
+        transformBall.position = startPosition;
     }
     
     public void SetPlayState()
@@ -104,7 +105,7 @@ public class ObjectsManager : Singleton<ObjectsManager>
         SelectLayout.SetEditState();
         rigidbodyBall.useGravity = false;
         rigidbodyBall.velocity = Vector3.zero;
-        ball.transform.position = startPosition;
+        transformBall.position = startPosition;
     }
 
     public void BallPlay()
@@ -125,4 +126,6 @@ public class ObjectsManager : Singleton<ObjectsManager>
         rigidbodyBall.useGravity = true;
         rigidbodyBall.velocity = velocityBall;
     }
+    
+
 }

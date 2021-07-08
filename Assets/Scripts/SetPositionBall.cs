@@ -6,35 +6,38 @@ using UnityEngine.UI;
 
 public class SetPositionBall : MonoBehaviour
 {
+    [SerializeField] private float deltaOffset = 0.01f;
     [SerializeField] private GameObject camera;
     [SerializeField] private GameObject ball;
     [SerializeField] 
     void Update()
     {
-        ball.transform.localRotation = camera.transform.rotation;
+        ball.transform.rotation = camera.transform.rotation;
     }
 
     public void Up()
     {
-        //position = Vector3(transform.localPosition.x , transform.localPosition.y + 0.1f, transform.localPosition.z);
-        ball.transform.position +=  transform.rotation* Vector3.up  * 0.1f;
+        transformDirection(Vector3.up);
     }
     
     public void Left()
     {
-        //position = Vector3(transform.localPosition.x , transform.localPosition.y + 0.1f, transform.localPosition.z);
-        ball.transform.position +=  transform.rotation* Vector3.left  * 0.1f;
+        transformDirection(Vector3.left);
     }
     
     public void Right()
     {
-        //position = Vector3(transform.localPosition.x , transform.localPosition.y + 0.1f, transform.localPosition.z);
-        ball.transform.position +=  transform.rotation* Vector3.right  * 0.1f;
+        transformDirection( Vector3.right);
     }
     
     public void Down()
     {
-        //position = Vector3(transform.localPosition.x , transform.localPosition.y + 0.1f, transform.localPosition.z);
-        ball.transform.position +=  transform.rotation* Vector3.down  * 0.1f;
+        transformDirection(Vector3.down);
+    }
+
+    private void transformDirection(Vector3 direction)
+    {
+        ball.transform.position +=  ball.transform.rotation * direction * deltaOffset;
+        ObjectsManager.Instance.startPosition = ball.transform.position;
     }
 }

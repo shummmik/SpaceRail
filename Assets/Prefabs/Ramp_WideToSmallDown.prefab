@@ -29,7 +29,7 @@ Transform:
   m_GameObject: {fileID: 405226180}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
+  m_LocalScale: {x: 0.3, y: 0.3, z: 0.3}
   m_Children:
   - {fileID: 8521021042242448016}
   - {fileID: 2315747826862177859}
@@ -116,6 +116,7 @@ MonoBehaviour:
   - {fileID: 2315747826862177859}
   ConnectorConnections: []
   Owner: {fileID: 0}
+  meshFilter: {fileID: 0}
 --- !u!1 &1155499950666021792
 GameObject:
   m_ObjectHideFlags: 0
