@@ -21,8 +21,6 @@ public class ObjectsManager : Singleton<ObjectsManager>
     
     private void Awake()
     {
-        
-        //rigidbodyBall = ball.GetComponent<Rigidbody>();
         InitializeLayout();
     }
 
