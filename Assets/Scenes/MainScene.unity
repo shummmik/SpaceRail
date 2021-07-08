@@ -5144,7 +5144,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   transformTouchMarker: {fileID: 1311298720}
   camera: {fileID: 1751300438}
-  deltaOffset: 0.01
+  deltaOffset: 0.1
 --- !u!1 &1861700708
 GameObject:
   m_ObjectHideFlags: 0
