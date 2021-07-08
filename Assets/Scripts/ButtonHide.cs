@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -16,7 +16,7 @@ public class ButtonHide : MonoBehaviour
     {
         offsetWidth = Screen.width / 2;
         hide = true;
-        text.text = "<";
+        text.GetComponent<TMP_Text>().text = "<";
     }
     
 
@@ -24,12 +24,12 @@ public class ButtonHide : MonoBehaviour
     {
         if (hide)
         {
-            text.text = ">";
+            text.GetComponent<TMP_Text>().text = ">";
             hide = false;
         }
         else
         {
-            text.text = "<";
+            text.GetComponent<TMP_Text>().text = "<";
             hide = true;
         }
     }

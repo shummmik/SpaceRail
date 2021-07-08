@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
@@ -31,6 +31,7 @@ public class CreateButtons : MonoBehaviour
     private void SetPiece(Piece piece)
     {
         ObjectsManager.Instance.SetPiece(piece);
+        // selectLayout.SelectPiece(piece);
     }
 
 }

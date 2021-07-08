@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,6 +30,14 @@ public class Layout : MonoBehaviour
         Destroyed = true;
     }
 
+    private void Start()
+    {
+        if (addPiece)
+        {
+           // CreateCurrentInstance();
+        }
+    }
+
     void Update()
     {
 
@@ -50,31 +58,32 @@ public class Layout : MonoBehaviour
 
                 if (pieces.Count == 0)
                 {
-                    CurrentInstance.transform.position = transform.position;
+                    CurrentInstance.transform.position = this.transform.TransformPoint(Vector3.zero);
                 }
                 else
                 {
+
                     float closestSqrDist = float.MaxValue;
-                    
-                    for (int i = 0; i < pieces.Count; ++i)
+                    for (int i = 0; i < this.pieces.Count; ++i)
                     {
-                        Piece pieceInList = pieces[i];
-                        if (pieceInList == null)
+                        Piece r = pieces[i];
+
+                        if (r == null)
                             continue;
-                        
-                        for (int numConnectorInPiece = 0; numConnectorInPiece < pieceInList.Connectors.Length; ++numConnectorInPiece)
+
+                        for (int k = 0; k < r.Connectors.Length; ++k)
                         {
-                            if (pieceInList.ConnectorConnections[numConnectorInPiece] != null)
+                            if (r.ConnectorConnections[k] != null)
                                 continue;
-                            var guiPts = Camera.main.WorldToScreenPoint(pieceInList.Connectors[numConnectorInPiece].transform.position);
+                            var guiPts = Camera.main.WorldToScreenPoint(r.Connectors[k].transform.position);
 
                             float dist = (guiPts - new Vector3(width / 2, height / 2, 0)).sqrMagnitude;
 
                             if (dist < closestSqrDist)
                             {
                                 closestSqrDist = dist;
-                                currentCLosestPiece = pieceInList;
-                                currentClosestExit = numConnectorInPiece;
+                                currentCLosestPiece = r;
+                                currentClosestExit = k;
                             }
                         }
                     }
@@ -89,40 +98,47 @@ public class Layout : MonoBehaviour
                         Quaternion rotation = CurrentInstance.transform.rotation * difference;
                         CurrentInstance.transform.rotation = rotation;
                         CurrentInstance.transform.position = closest.position +
-                                                             CurrentInstance.transform.TransformVector(
-                                                                 -usedExit.transform.localPosition
-                                                                 );
+                                                             CurrentInstance.transform.TransformVector(-usedExit
+                                                                 .transform
+                                                                 .localPosition);
                     }
+
                 }
             }
             else
             {
                 if (pieces.Count > 0)
                 {
+
                     float closestSqrDist = float.MaxValue;
-                    foreach (var pieceInList in pieces)
+                    for (int i = 0; i < this.pieces.Count; ++i)
                     {
-                        if (pieceInList == null)
+                        Piece r = pieces[i];
+
+                        if (r == null)
                             continue;
 
-                        for (int numConnectorInPiece = 0; numConnectorInPiece < pieceInList.Connectors.Length; ++numConnectorInPiece)
+                        for (int k = 0; k < r.Connectors.Length; ++k)
                         {
-                            if (pieceInList.ConnectorConnections[numConnectorInPiece] != null)
+                            if (r.ConnectorConnections[k] != null)
                                 continue;
-                            var guiPts = camera.WorldToScreenPoint(pieceInList.Connectors[numConnectorInPiece].transform.position);
+                            var guiPts = Camera.main.WorldToScreenPoint(r.Connectors[k].transform.position);
+
                             float dist = (guiPts - new Vector3(width / 2, height / 2, 0)).sqrMagnitude;
+
                             if (dist < closestSqrDist)
                             {
                                 closestSqrDist = dist;
-                                currentCLosestPiece = pieceInList;
-                                currentClosestExit = numConnectorInPiece;
+                                currentCLosestPiece = r;
+                                currentClosestExit = k;
                             }
                         }
                     }
 
                     if (currentCLosestPiece != null)
                     {
-                        MeshFilter filter = currentCLosestPiece.meshFilter;
+                        // currentCLosestPiece.gameObject.GetComponent<MeshRenderer>().material = outLineMaterial;
+                        MeshFilter filter = currentCLosestPiece.gameObject.GetComponentInChildren<MeshFilter>();
 
                         if (filter != null)
                         {
@@ -131,6 +147,8 @@ public class Layout : MonoBehaviour
                             Graphics.DrawMesh(filter.sharedMesh, matrix, outLineMaterial, 0);
                         }
                     }
+
+
                 }
 
 
@@ -152,20 +170,20 @@ public class Layout : MonoBehaviour
     {
         if (addPiece)
         {
-            var current = Instantiate(CurrentInstancePrefab);
-            current.transform.SetParent(this.transform, false);
-            current.transform.position = CurrentInstance.transform.position;
-            current.transform.rotation = CurrentInstance.transform.rotation;
-            current.transform.localScale = CurrentInstance.transform.localScale;
+            var c = Instantiate(CurrentInstancePrefab);
+            c.transform.SetParent(this.transform, false);
+            c.transform.position = CurrentInstance.transform.position;
+            c.transform.rotation = CurrentInstance.transform.rotation;
+            c.transform.localScale = CurrentInstance.transform.localScale;
 
-            current.name = CurrentInstancePrefab.gameObject.name;
-            current.gameObject.isStatic = true;
-            current.Placed(this);
-            pieces.Add(current);
+            c.name = CurrentInstancePrefab.gameObject.name;
+            c.gameObject.isStatic = true;
+            c.Placed(this);
+            pieces.Add(c);
             if (currentCLosestPiece != null)
             {
-                currentCLosestPiece.ConnectorConnections[currentClosestExit] = current;
-                current.ConnectorConnections[CurrentUsedExit] = currentCLosestPiece;
+                currentCLosestPiece.ConnectorConnections[currentClosestExit] = c;
+                c.ConnectorConnections[CurrentUsedExit] = currentCLosestPiece;
             }
         }
     }
@@ -180,10 +198,12 @@ public class Layout : MonoBehaviour
 
     private void CreateCurrentInstance()
     {
-        CurrentInstance = Instantiate(CurrentInstancePrefab,transform);
+        CurrentInstance = Instantiate(CurrentInstancePrefab, this.transform);
         CurrentInstance.name = "TempInstance";
         CurrentInstance.gameObject.GetComponent<MeshRenderer>().material = outLineMaterial;
-        
+        // mRender.material = outLineMaterial;
+            // SetValue(outLine, 1);
+
     }
     
     public void EnableDel()
