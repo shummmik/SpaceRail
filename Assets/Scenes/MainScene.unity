@@ -3594,7 +3594,7 @@ MonoBehaviour:
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
-          m_BoolArgument: 1
+          m_BoolArgument: 0
         m_CallState: 2
       - m_Target: {fileID: 1238294051}
         m_TargetAssemblyTypeName: UnityEngine.Behaviour, UnityEngine
@@ -3606,7 +3606,7 @@ MonoBehaviour:
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
-          m_BoolArgument: 1
+          m_BoolArgument: 0
         m_CallState: 2
   mDisplayAdvanced: 1
 --- !u!114 &1238294051
@@ -5144,7 +5144,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   transformTouchMarker: {fileID: 1311298720}
   camera: {fileID: 1751300438}
-  deltaOffset: 0.1
+  deltaOffset: 0.5
 --- !u!1 &1861700708
 GameObject:
   m_ObjectHideFlags: 0

@@ -10,7 +10,7 @@ public class TransformState: BaseState
     {
         base.PrepareState();
         
-        
+        ObjectsManager.Instance.SelectLayout.SetPlayState();
         for (int i = 0; i < owner.listObjectsEdit.Count; i++)
         {
             owner.listObjectsEdit[i].SetActive(true);
