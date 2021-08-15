@@ -19,6 +19,8 @@ public class Piece : MonoBehaviour
 
    public MeshFilter meshFilter;
 
+   [SerializeField] private Material outlineMaterial;
+
 
    private void Start()
    {
@@ -53,6 +55,11 @@ public class Piece : MonoBehaviour
          
       }
 
+   }
+
+   public void SetOutlineMaterial()
+   {
+      gameObject.GetComponent<MeshRenderer>().material = outlineMaterial;
    }
 
 }

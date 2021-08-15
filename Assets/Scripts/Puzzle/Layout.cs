@@ -14,8 +14,8 @@ public class Layout : MonoBehaviour
     private Piece CurrentInstance = null;
     private Piece currentCLosestPiece = null;
     
-    private int width = Screen.width;
-    private int height = Screen.height;
+    private int half_width = Screen.width/2;
+    private int half_height = Screen.height/2;
     private int currentClosestExit = -1;
     private int CurrentUsedExit = 0;
 
@@ -28,14 +28,6 @@ public class Layout : MonoBehaviour
     void OnDestroy()
     {
         Destroyed = true;
-    }
-
-    private void Start()
-    {
-        if (addPiece)
-        {
-           // CreateCurrentInstance();
-        }
     }
 
     void Update()
@@ -75,9 +67,10 @@ public class Layout : MonoBehaviour
                         {
                             if (r.ConnectorConnections[k] != null)
                                 continue;
-                            var guiPts = Camera.main.WorldToScreenPoint(r.Connectors[k].transform.position);
+                            // Transforms position from world space into screen space.
+                            var guiPts = camera.WorldToScreenPoint(r.Connectors[k].transform.position);
 
-                            float dist = (guiPts - new Vector3(width / 2, height / 2, 0)).sqrMagnitude;
+                            float dist = (guiPts - new Vector3(half_width, half_height, 0)).sqrMagnitude;
 
                             if (dist < closestSqrDist)
                             {
@@ -90,19 +83,18 @@ public class Layout : MonoBehaviour
 
                     if (currentCLosestPiece != null)
                     {
-                        CurrentInstance.transform.rotation = Quaternion.identity;
+                        // CurrentInstance.transform.rotation = Quaternion.identity;
                         Transform closest = currentCLosestPiece.Connectors[currentClosestExit];
                         Transform usedExit = CurrentInstance.Connectors[CurrentUsedExit];
                         Quaternion targetRotation = Quaternion.LookRotation(-closest.forward, closest.up);
                         Quaternion difference = targetRotation * Quaternion.Inverse(usedExit.rotation);
-                        Quaternion rotation = CurrentInstance.transform.rotation * difference;
-                        CurrentInstance.transform.rotation = rotation;
+                        // Quaternion rotation = CurrentInstance.transform.rotation * difference;
+                        CurrentInstance.transform.rotation = Quaternion.identity * difference;
                         CurrentInstance.transform.position = closest.position +
                                                              CurrentInstance.transform.TransformVector(-usedExit
                                                                  .transform
                                                                  .localPosition);
                     }
-
                 }
             }
             else
@@ -124,7 +116,7 @@ public class Layout : MonoBehaviour
                                 continue;
                             var guiPts = Camera.main.WorldToScreenPoint(r.Connectors[k].transform.position);
 
-                            float dist = (guiPts - new Vector3(width / 2, height / 2, 0)).sqrMagnitude;
+                            float dist = (guiPts - new Vector3(half_width, half_height, 0)).sqrMagnitude;
 
                             if (dist < closestSqrDist)
                             {
@@ -137,8 +129,7 @@ public class Layout : MonoBehaviour
 
                     if (currentCLosestPiece != null)
                     {
-                        // currentCLosestPiece.gameObject.GetComponent<MeshRenderer>().material = outLineMaterial;
-                        MeshFilter filter = currentCLosestPiece.gameObject.GetComponentInChildren<MeshFilter>();
+                        MeshFilter filter = currentCLosestPiece.meshFilter;
 
                         if (filter != null)
                         {
@@ -147,11 +138,7 @@ public class Layout : MonoBehaviour
                             Graphics.DrawMesh(filter.sharedMesh, matrix, outLineMaterial, 0);
                         }
                     }
-
-
                 }
-
-
             }
         }
     }
@@ -170,20 +157,20 @@ public class Layout : MonoBehaviour
     {
         if (addPiece)
         {
-            var c = Instantiate(CurrentInstancePrefab);
-            c.transform.SetParent(this.transform, false);
-            c.transform.position = CurrentInstance.transform.position;
-            c.transform.rotation = CurrentInstance.transform.rotation;
-            c.transform.localScale = CurrentInstance.transform.localScale;
+            var newPiece = Instantiate(CurrentInstancePrefab);
+            newPiece.transform.SetParent(this.transform, false);
+            newPiece.transform.position = CurrentInstance.transform.position;
+            newPiece.transform.rotation = CurrentInstance.transform.rotation;
+            newPiece.transform.localScale = CurrentInstance.transform.localScale;
 
-            c.name = CurrentInstancePrefab.gameObject.name;
-            c.gameObject.isStatic = true;
-            c.Placed(this);
-            pieces.Add(c);
+            newPiece.name = CurrentInstancePrefab.gameObject.name;
+            newPiece.gameObject.isStatic = true;
+            newPiece.Placed(this);
+            pieces.Add(newPiece);
             if (currentCLosestPiece != null)
             {
-                currentCLosestPiece.ConnectorConnections[currentClosestExit] = c;
-                c.ConnectorConnections[CurrentUsedExit] = currentCLosestPiece;
+                currentCLosestPiece.ConnectorConnections[currentClosestExit] = newPiece;
+                newPiece.ConnectorConnections[CurrentUsedExit] = currentCLosestPiece;
             }
         }
     }
@@ -200,10 +187,7 @@ public class Layout : MonoBehaviour
     {
         CurrentInstance = Instantiate(CurrentInstancePrefab, this.transform);
         CurrentInstance.name = "TempInstance";
-        CurrentInstance.gameObject.GetComponent<MeshRenderer>().material = outLineMaterial;
-        // mRender.material = outLineMaterial;
-            // SetValue(outLine, 1);
-
+        CurrentInstance.SetOutlineMaterial();
     }
     
     public void EnableDel()

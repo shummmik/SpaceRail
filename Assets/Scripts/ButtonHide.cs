@@ -22,16 +22,8 @@ public class ButtonHide : MonoBehaviour
 
     public void Hide()
     {
-        if (hide)
-        {
-            text.GetComponent<TMP_Text>().text = ">";
-            hide = false;
-        }
-        else
-        {
-            text.GetComponent<TMP_Text>().text = "<";
-            hide = true;
-        }
+        text.text = hide ? ">" : "<";
+        hide = !hide;
     }
 
     private void Update()
